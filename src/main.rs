@@ -4,7 +4,8 @@ mod bit;
 
 
 fn main() {
-    let subscriber = tracing_subscriber::fmt()
+    let _subscriber = tracing_subscriber::fmt::fmt()
+        .with_level(true)
         .init();
     srv::init();
 }
