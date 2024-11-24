@@ -1,3 +1,10 @@
+mod srv;
+mod bit;
+
+
+
 fn main() {
-    println!("Hello, world!");
+    let subscriber = tracing_subscriber::fmt()
+        .init();
+    srv::init();
 }
