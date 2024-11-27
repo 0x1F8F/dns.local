@@ -3,16 +3,16 @@ use std::{io::Write, net::{Ipv4Addr, SocketAddrV4, TcpListener, TcpStream}};
 use tracing::info;
 
 
-pub fn handler(con : &mut TcpStream) {
+pub fn tcp_handler(con : &mut TcpStream) {
     con.write_all(&[0u8;12]).unwrap();
 }
 
 pub fn init_tcp( addr : SocketAddrV4 ) {
-    info!("starting server: {}",addr);
+    info!("starting tcp listener : {}",addr);
     let service = TcpListener::bind(addr).unwrap();
     while let Ok((mut con,peer)) = service.accept() {
         info!("connection accepted [ peer address : {} ]", peer);
-        handler(&mut con);
+        tcp_handler(&mut con);
     }
 }
 
