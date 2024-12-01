@@ -1,5 +1,6 @@
 mod srv;
 mod bit;
+mod dns;
 
 
 
