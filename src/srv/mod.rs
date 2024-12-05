@@ -1,9 +1,13 @@
-use std::{io::Write, net::{Ipv4Addr, SocketAddrV4, TcpListener, TcpStream}};
+use std::{io::Write ,io::Read, net::{Ipv4Addr, SocketAddrV4, TcpListener, TcpStream}};
 
 use tracing::info;
+use std::vec::Vec;
 
 
 pub fn tcp_handler(con : &mut TcpStream) {
+    let binding = read_tcp_stream(con);
+    let data = std::ffi::CStr::from_bytes_until_nul(&binding).expect("cannot interpret as c_string");
+    info!("received : {:?}",data);
     con.write_all(&[0u8;12]).unwrap();
 }
 
@@ -18,4 +22,18 @@ pub fn init_tcp( addr : SocketAddrV4 ) {
 
 pub fn init() {
     init_tcp(SocketAddrV4::new(Ipv4Addr::new(127, 0, 0, 1), 8053));
+}
+
+
+pub fn read_tcp_stream(stream : &mut TcpStream) -> Vec<u8> {
+    let mut byte_stream: Vec<u8> = vec![];
+    'reader: loop {
+        let mut buf = [0u8;512];
+        match stream.read(&mut buf) {
+            Ok(0) => { break 'reader; },
+            Ok(len) => { byte_stream.extend_from_slice(&buf[..len])},
+            Err(_) => {}
+        }
+    }
+    byte_stream
 }
