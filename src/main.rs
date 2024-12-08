@@ -1,3 +1,5 @@
+use tracing::Level;
+
 mod srv;
 mod bit;
 mod dns;
@@ -6,7 +8,7 @@ mod dns;
 
 fn main() {
     let _subscriber = tracing_subscriber::fmt::fmt()
-        .with_level(true)
+        .with_max_level(Level::TRACE)
         .init();
     srv::init();
 }

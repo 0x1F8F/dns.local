@@ -2,7 +2,7 @@ use crate::bit::get;
 
 pub struct Header([u8;12]);
 
-
+// see: https://datatracker.ietf.org/doc/html/rfc1035
 // Header
 //  bit:  0         5  6  7  8         11             15
 //        +---------------------------------------------+
@@ -102,5 +102,10 @@ impl ReadHeader for Header {
     
     fn get_arcount(&self) -> u16 {
         u16::from_be_bytes(self.0[10..12].try_into().unwrap())
+    }
+}
+
+impl Header {
+    fn set_id(&mut self) {
     }
 }
