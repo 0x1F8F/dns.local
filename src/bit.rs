@@ -27,6 +27,21 @@ mod test {
     }
 
     #[test]
+    fn set_test_2() {
+        let a = 0b0111_0000u8;
+        let b = set(a , 7 , true);
+        println!("t2 {:80b} {:80b}", a,b);
+        assert_eq!(b , 0b1111_0000u8);
+    }
+
+    #[test]
+    fn set_test_3() {
+        let a = 0b1111_0000u8;
+        let b = set(a, 7, false);
+        assert_eq!(b , 0b0111_0000u8);
+    }
+
+    #[test]
     fn get_test_1() {
         let a :u8 = 0b0111_1111; // 3
         let b = get(a , 0);

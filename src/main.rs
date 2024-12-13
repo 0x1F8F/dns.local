@@ -7,7 +7,7 @@ mod dns;
 
 
 fn main() {
-    let _subscriber = tracing_subscriber::fmt::fmt()
+    tracing_subscriber::fmt::fmt()
         .with_max_level(Level::TRACE)
         .init();
     srv::init();

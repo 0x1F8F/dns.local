@@ -1,4 +1,6 @@
 use crate::bit::get;
+use std::fmt::{format, Display};
+
 
 pub struct Header([u8;12]);
 
@@ -106,6 +108,49 @@ impl ReadHeader for Header {
 }
 
 impl Header {
-    fn set_id(&mut self) {
+    fn set_id<T>(&mut self, id: &[u8 ;2 ]) {
+        self.0[0] = id[0];
+        self.0[1] = id[1];
+
+    }
+}
+
+impl Display for Header {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let id = self.get_id();
+        let qr = match self.get_qr() {
+            0 => "QUERY",
+            1 => "RESPONSE",
+            _ => "Error-QA"
+        };
+        let opcode = match self.get_opcode() {
+            0 => "QUERY",
+            1 => "IQUERY",
+            2 => "STATUS",
+            _ => "unreserved"
+        };
+        let aa = match self.get_aa() {
+            0 => "NO-AA",
+            1 => "AA",
+            _ => "Error-AA"
+        };
+        let tc = match self.get_tc() {
+            0 => "NO-TRUNCATION",
+            1 => "TRUNCATION",
+            _ => "Error-TC"
+        };
+        let (rd , ra) = ( self.get_rd()==1 , self.get_ra()==1 );
+        let rcode = match self.get_rcode() {
+            0 => "No-Error",
+            1 => "Format-Error",
+            2 => "Server-Error",
+            3 => "Name-Error",
+            4 => "Not-Implemented-Error",
+            5 => "Refused",
+            d => &format!("{}-RCODE",d),
+        };
+        let (ancount , nscount , arcount) = (self.get_ancount() , self.get_nscount() , self.get_arcount());
+        write!(f , "id:{} {} {} {} {} rd:{} ra:{} {} ancode:{} nscount:{} arcount:{}" , id,qr,opcode,aa,tc,rd,ra,rcode,ancount,nscount,arcount);
+        Ok(())
     }
 }
