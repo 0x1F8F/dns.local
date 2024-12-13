@@ -2,7 +2,7 @@ use crate::bit::get;
 use std::fmt::{format, Display};
 
 
-pub struct Header([u8;12]);
+pub struct Header(pub [u8;12]);
 
 // see: https://datatracker.ietf.org/doc/html/rfc1035
 // Header

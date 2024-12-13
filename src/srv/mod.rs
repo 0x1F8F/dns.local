@@ -1,15 +1,29 @@
-use std::{io::{Read, Write} ,net::{Ipv4Addr, Shutdown, SocketAddrV4, TcpListener, TcpStream}};
+use std::{io::{ErrorKind, Read, Write} ,net::{Ipv4Addr, Shutdown, SocketAddrV4, TcpListener, TcpStream}};
 
-use tracing::{info, trace};
+use tracing::{error, info, trace};
 use std::vec::Vec;
+use crate::dns::header::Header;
 
 
 pub fn tcp_handler(con : &mut TcpStream) {
-    let binding = read_tcp_stream(con);
-    let data = unsafe { 
-        std::ffi::CStr::from_bytes_with_nul_unchecked(&binding)
+    let data = read_tcp_stream(con);
+    let cstr_data = unsafe { 
+        std::ffi::CStr::from_bytes_with_nul_unchecked(&data)
     };
-    trace!("received : {:?}",data);
+    trace!("received : {:?}",&cstr_data);
+    let header = parser(&data);
+    trace!("Header => {}",header);
+}
+
+pub fn parser(h : &[u8]) -> Header {
+    let f12:Result<[u8; 12], _> = h[0..=12].try_into();
+    match f12 {
+    Ok(h) => Header(h),
+    Err(_) => {
+            error!("parsing failed due to cov");
+            Header([0;12]) 
+        }
+    }
 }
 
 pub fn init_tcp( addr : SocketAddrV4 ) {
@@ -38,9 +52,14 @@ pub fn read_tcp_stream(stream : &mut TcpStream) -> Vec<u8> {
                 trace!("buffer size {} filled", len);
                 if len<511 { break 'reader };
             },
-            Err(_) => { break 'reader;}
+            Err(err) => {
+                error!("failed to read stream {}", err);
+                break 'reader;
+            }
         }
     }
     trace!("Exiting reader ...");
     byte_stream
 }
+
+
