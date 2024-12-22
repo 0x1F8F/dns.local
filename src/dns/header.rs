@@ -1,6 +1,5 @@
 use crate::bit::get;
-use std::fmt::{format, Display};
-
+use std::fmt::Display;
 
 pub struct Header(pub [u8;12]);
 
@@ -150,7 +149,19 @@ impl Display for Header {
             d => &format!("{}-RCODE",d),
         };
         let (ancount , nscount , arcount) = (self.get_ancount() , self.get_nscount() , self.get_arcount());
-        write!(f , "id:{} {} {} {} {} rd:{} ra:{} {} ancode:{} nscount:{} arcount:{}" , id,qr,opcode,aa,tc,rd,ra,rcode,ancount,nscount,arcount);
+        match write!(f , "id:{} {} {} {} {} rd:{} ra:{} {} ancode:{} nscount:{} arcount:{}" , id,qr,opcode,aa,tc,rd,ra,rcode,ancount,nscount,arcount) {
+            Ok(_) => {}
+            Err(e) => {
+                println!("Error cannot display header: {}", e);
+            }
+        };
         Ok(())
+    }
+}
+
+
+impl From<&[u8;12]> for Header{
+    fn from(value: &[u8;12]) -> Self {
+        Header(*value)
     }
 }
