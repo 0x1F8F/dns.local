@@ -1,3 +1,5 @@
+use tracing::error;
+
 use crate::bit::get;
 use std::fmt::Display;
 
@@ -86,7 +88,7 @@ impl ReadHeader for Header {
 
     fn get_rcode(&self) -> u8 {
         let rcode_ = self.0[3];
-        (rcode_ >> 0) & 0b1111u8
+        rcode_ & 0b1111u8
     }
     
     fn get_qdcount(&self) -> u16 {
@@ -107,10 +109,9 @@ impl ReadHeader for Header {
 }
 
 impl Header {
-    fn set_id<T>(&mut self, id: &[u8 ;2 ]) {
+    fn set_id<T>(&mut self, id: &[u8]) {
         self.0[0] = id[0];
         self.0[1] = id[1];
-
     }
 }
 
@@ -152,7 +153,7 @@ impl Display for Header {
         match write!(f , "id:{} {} {} {} {} rd:{} ra:{} {} ancode:{} nscount:{} arcount:{}" , id,qr,opcode,aa,tc,rd,ra,rcode,ancount,nscount,arcount) {
             Ok(_) => {}
             Err(e) => {
-                println!("Error cannot display header: {}", e);
+                error!("Error cannot display header: {}", e);
             }
         };
         Ok(())

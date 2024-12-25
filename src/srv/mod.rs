@@ -1,9 +1,9 @@
-use std::{io::{ErrorKind, Read, Write} ,net::{Ipv4Addr, Shutdown, SocketAddrV4, TcpListener, TcpStream}};
+use std::{io::Read ,net::{Ipv4Addr, SocketAddrV4, TcpListener, TcpStream}};
 
 use tracing::{error, info, trace};
 use std::vec::Vec;
 use crate::dns::header::Header;
-
+use crate::dns::question;
 
 pub fn tcp_handler(con : &mut TcpStream) {
     let data = read_tcp_stream(con);
@@ -12,11 +12,13 @@ pub fn tcp_handler(con : &mut TcpStream) {
     };
     trace!("received : {:?}",&cstr_data);
     let header = parser(&data);
+    let name = question::parse(&data[13..data.len()]);
     trace!("Header => {}",header);
+    trace!("Name => {:?}",name);
 }
 
 pub fn parser(h : &[u8]) -> Header {
-    let f12:Result<[u8; 12], _> = h[0..=12].try_into();
+    let f12:Result<[u8; 12], _> = h[0..12].try_into();
     match f12 {
     Ok(h) => Header(h),
     Err(_) => {
