@@ -127,19 +127,22 @@ impl Display for Header {
             0 => "QUERY",
             1 => "IQUERY",
             2 => "STATUS",
-            _ => "unreserved"
+            _ => ""
         };
         let aa = match self.get_aa() {
-            0 => "NO-AA",
+            0 => "",
             1 => "AA",
             _ => "Error-AA"
         };
         let tc = match self.get_tc() {
-            0 => "NO-TRUNCATION",
+            0 => "",
             1 => "TRUNCATION",
             _ => "Error-TC"
         };
-        let (rd , ra) = ( self.get_rd()==1 , self.get_ra()==1 );
+        let (rd , ra) = ( 
+            if self.get_rd()==1 { "RD" } else { "" },
+            if self.get_ra()==1 { "RA" } else { "" }
+        );
         let rcode = match self.get_rcode() {
             0 => "No-Error",
             1 => "Format-Error",
@@ -149,8 +152,10 @@ impl Display for Header {
             5 => "Refused",
             d => &format!("{}-RCODE",d),
         };
-        let (ancount , nscount , arcount) = (self.get_ancount() , self.get_nscount() , self.get_arcount());
-        match write!(f , "id:{} {} {} {} {} rd:{} ra:{} {} ancode:{} nscount:{} arcount:{}" , id,qr,opcode,aa,tc,rd,ra,rcode,ancount,nscount,arcount) {
+        let (qn , ancount , nscount , arcount) = (self.get_qdcount() , self.get_ancount() , self.get_nscount() , self.get_arcount());
+        match write!(f , "id:{} {} {} {} {} rd:{} ra:{} {} qn:{} ancode:{} nscount:{} arcount:{}" ,
+            id,qr,opcode,aa,tc,rd,ra,rcode,qn,ancount,nscount,arcount)
+        {
             Ok(_) => {}
             Err(e) => {
                 error!("Error cannot display header: {}", e);

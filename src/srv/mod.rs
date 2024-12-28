@@ -1,7 +1,6 @@
 use std::{io::Read ,net::{Ipv4Addr, SocketAddrV4, TcpListener, TcpStream}};
 
 use tracing::{error, info, trace};
-use std::vec::Vec;
 use crate::dns::header::Header;
 use crate::dns::question;
 
@@ -12,7 +11,8 @@ pub fn tcp_handler(con : &mut TcpStream) {
     };
     trace!("received : {:?}",&cstr_data);
     let header = parser(&data);
-    let name = question::parse(&data[13..data.len()]);
+    trace!("q: {}", data[14] );
+    let name = question::parse(&data[14..data.len()]);
     trace!("Header => {}",header);
     trace!("Name => {:?}",name);
 }
@@ -22,7 +22,7 @@ pub fn parser(h : &[u8]) -> Header {
     match f12 {
     Ok(h) => Header(h),
     Err(_) => {
-            error!("parsing failed due to cov");
+            error!("parsing failed due to conv");
             Header([0;12]) 
         }
     }
