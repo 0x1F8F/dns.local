@@ -1,7 +1,8 @@
-pub fn parse(r : &[u8]) -> Vec<String> {
+pub fn parse(r : &[u8]) -> ( Vec<String> , u16 ) {
     let mut name: Vec<String> = Vec::new();
     let mut len:u8 = 0;
     let mut buf: String = String::new();
+    let mut a = 0;
     for i in r {
         if len!=0 {
             buf.push(char::from_u32(*i as u32).unwrap());
@@ -17,9 +18,10 @@ pub fn parse(r : &[u8]) -> Vec<String> {
                 buf.clear();
             }
             len = *i;
+            a += *i as u16;
         }
     }
-    name
+    ( name , a )
 }
 
 
@@ -37,7 +39,7 @@ mod unit_test {
             // X    A     M    P    L      E     3     C     O      M   EOF
             0x78 ,0x61 ,0x6D ,0x70 ,0x6C ,0x65 ,0x03 ,0x63 ,0x6F ,0x6D, 0x00
         ];
-        let out = parse(&inp[14..inp.len()]);
+        let ( out, a ) = parse(&inp[14..inp.len()]);
         //print!("{:?}" , out);
         let act_out = vec![
             "www".to_owned(),
@@ -45,6 +47,7 @@ mod unit_test {
             "com".to_owned()
         ];
         assert_eq!(out , act_out);
+        assert_eq!(a , 13 );
     }
 }
 

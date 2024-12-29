@@ -12,9 +12,9 @@ pub fn tcp_handler(con : &mut TcpStream) {
     trace!("received : {:?}",&cstr_data);
     let header = parser(&data);
     trace!("q: {}", data[14] );
-    let name = question::parse(&data[14..data.len()]);
+    let ( name , len ) = question::parse(&data[14..data.len()]);
     trace!("Header => {}",header);
-    trace!("Name => {:?}",name);
+    trace!("Name => {:?} length: {}",name , len);
 }
 
 pub fn parser(h : &[u8]) -> Header {
