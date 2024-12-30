@@ -1,8 +1,11 @@
+pub mod udp;
+
+
 use std::{io::Read ,net::{Ipv4Addr, SocketAddrV4, TcpListener, TcpStream}};
 
 use tracing::{error, info, trace};
 use crate::dns::header::Header;
-use crate::dns::question;
+use crate::dns::name::parse_name;
 
 pub fn tcp_handler(con : &mut TcpStream) {
     let data = read_tcp_stream(con);
@@ -12,7 +15,7 @@ pub fn tcp_handler(con : &mut TcpStream) {
     trace!("received : {:?}",&cstr_data);
     let header = parser(&data);
     trace!("q: {}", data[14] );
-    let ( name , len ) = question::parse(&data[14..data.len()]);
+    let ( name , len ) = parse_name(&data[14..data.len()]);
     trace!("Header => {}",header);
     trace!("Name => {:?} length: {}",name , len);
 }
@@ -20,10 +23,12 @@ pub fn tcp_handler(con : &mut TcpStream) {
 pub fn parser(h : &[u8]) -> Header {
     let f12:Result<[u8; 12], _> = h[0..12].try_into();
     match f12 {
-    Ok(h) => Header(h),
+    Ok(h_) => {
+        Header(h.as_ref())
+    },
     Err(_) => {
             error!("parsing failed due to conv");
-            Header([0;12]) 
+            Header(&[0;12]) 
         }
     }
 }
@@ -38,7 +43,8 @@ pub fn init_tcp( addr : SocketAddrV4 ) {
 }
 
 pub fn init() {
-    init_tcp(SocketAddrV4::new(Ipv4Addr::new(127, 0, 0, 1), 8053));
+    //init_tcp(SocketAddrV4::new(Ipv4Addr::new(127, 0, 0, 1), 8053));
+    udp::init("127.0.0.1:8053").unwrap();
 }
 
 

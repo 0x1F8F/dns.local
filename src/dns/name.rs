@@ -1,4 +1,4 @@
-pub fn parse(r : &[u8]) -> ( Vec<String> , u16 ) {
+pub fn parse_name(r : &[u8]) -> ( Vec<String> , u16 ) {
     let mut name: Vec<String> = Vec::new();
     let mut len:u8 = 0;
     let mut buf: String = String::new();

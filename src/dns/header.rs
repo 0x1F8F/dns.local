@@ -3,7 +3,8 @@ use tracing::error;
 use crate::bit::get;
 use std::fmt::Display;
 
-pub struct Header(pub [u8;12]);
+pub struct Header<'a>(pub &'a [u8]);
+
 
 // see: https://datatracker.ietf.org/doc/html/rfc1035
 // Header
@@ -51,7 +52,7 @@ trait ReadHeader {
     fn get_arcount(&self) -> u16;
 }
 
-impl ReadHeader for Header {
+impl<'a> ReadHeader for Header<'a> {
     fn get_id(&self) -> u16 {
         u16::from_be_bytes(self.0[..2].try_into().unwrap())
     }
@@ -108,14 +109,14 @@ impl ReadHeader for Header {
     }
 }
 
-impl Header {
-    fn set_id<T>(&mut self, id: &[u8]) {
-        self.0[0] = id[0];
-        self.0[1] = id[1];
-    }
-}
+//impl<'a> Header<'_> {
+//    fn set_id<T>(&mut self, id: &[u8]) {
+//        self.0[0] = id[0];
+//        self.0[1] = id[1];
+//    }
+//}
 
-impl Display for Header {
+impl<'a> Display for Header<'a> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let id = self.get_id();
         let qr = match self.get_qr() {
@@ -166,8 +167,8 @@ impl Display for Header {
 }
 
 
-impl From<&[u8;12]> for Header{
-    fn from(value: &[u8;12]) -> Self {
-        Header(*value)
+impl<'a> From<&'a [u8]> for Header<'a> {
+    fn from(value:&'a [u8]) -> Self {
+        Header(value)
     }
 }
