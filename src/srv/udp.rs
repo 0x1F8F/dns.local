@@ -13,7 +13,7 @@ where T: ToSocketAddrs
         match buf.get_mut(..len) {
             Some(_buf) => {
                 trace!("conn from : {}", peer);
-               let header = header::Header(_buf[..=12].as_ref());
+                let header = header::Header(_buf[..=12].as_ref());
                 let name = name::parse_name(&_buf[12..len]);
                 trace!("Header => {}", header);
                 trace!("Name   => {:?}", name);

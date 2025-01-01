@@ -27,7 +27,7 @@ pub fn parse_name(r : &[u8]) -> ( Vec<String> , u16 ) {
 
 #[cfg(test)]
 mod unit_test {
-    use crate::dns::question::*;
+    use crate::dns::name::*;
     #[test]
     fn test_parse_domain() {
         let inp: &[u8] = &[
@@ -39,7 +39,7 @@ mod unit_test {
             // X    A     M    P    L      E     3     C     O      M   EOF
             0x78 ,0x61 ,0x6D ,0x70 ,0x6C ,0x65 ,0x03 ,0x63 ,0x6F ,0x6D, 0x00
         ];
-        let ( out, a ) = parse(&inp[14..inp.len()]);
+        let ( out, a ) = parse_name(&inp[14..inp.len()]);
         //print!("{:?}" , out);
         let act_out = vec![
             "www".to_owned(),
