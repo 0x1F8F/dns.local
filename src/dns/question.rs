@@ -1,12 +1,14 @@
+use super::types::{Class, Type};
+
 
 
 pub struct Question {
-    class : u8,
-    type_ : u8,
+    class : Class,
+    type_ : Type,
     name : u8,
 }
 
 
-enum QTYPE {
+enum QType {
 
 }

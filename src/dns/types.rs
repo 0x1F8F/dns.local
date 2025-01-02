@@ -26,7 +26,7 @@
 //
 //
 
-pub enum TYPE {
+pub enum Type {
     A,          // 1 host addr
     NS,         // 2 authoritative name server
     MD,         // 3 mail destination
@@ -45,14 +45,14 @@ pub enum TYPE {
     TXT,        // 16 text
 }
 
-pub enum CLASS {
+pub enum Class {
     IN,     // 1 internet
     CS,     // 2 CSNET
     CH,     // 3 CHAOS
     HS,     // 4 hesiod
 }
 
-impl TYPE {
+impl Type {
     fn new( i:u16 ) -> Option<Self> {
         match i {
             1 => Some(Self::A),
@@ -61,7 +61,7 @@ impl TYPE {
     }
 }
 
-impl CLASS {
+impl Class {
     fn new( i:u8 ) -> Option<Self> {
         match i {
             1 => Some(Self::IN),

@@ -8,6 +8,6 @@ pub mod records;
 pub mod types;
 
 
-pub fn parser(payload : &[u8]) -> Option<( Header , Question )> {
+pub fn query_parser(payload : &[u8]) -> Option<( Header , Question )> {
     None
 }
