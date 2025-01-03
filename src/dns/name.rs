@@ -21,13 +21,33 @@
 //      Note that while upper and lower case letters are allowed in domain
 //  names, no significance is attached to the case.  That is, two names with
 //  the same spelling but different case are to be treated as if identical.
+//  
+//
+//
+
+use std::fmt::Display;
+
+use tracing::trace;
 
 
+pub struct Name<'a> {
+    td : &'a [u8],            // Top level domain
+    dn : &'a [u8],            // domain name
+    sd : Option<&'a [u8]>,    // sub-domain name
+}
 
-struct Name {
-    td : String,    // Top level domain
-    dn : String,    // domain name
-    sd : String,    // sub-domain name
+impl<'b> From<&'b [u8]> for Name<'b> {
+    fn from(value: &'b [u8]) -> Name {
+        trace!(" loc {} val {}; ",0 , value[0]);
+        let a: &'static [u8] = &[1];
+        Name { td: a , dn: a , sd : None }
+    }
+}
+
+impl Display for Name<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f , "Name => ")
+    }
 }
 
 
