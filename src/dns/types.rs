@@ -1,4 +1,4 @@
-
+//  RR format
 //
 //                                    1  1  1  1  1  1
 //      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -25,6 +25,8 @@
 //
 //
 //
+
+use std::fmt::Display;
 
 pub enum Type {
     A,          // 1 host addr
@@ -67,5 +69,44 @@ impl Class {
             1 => Some(Self::IN),
             _ => None,
         }
+    }
+}
+
+
+impl Display for Type {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}",
+            match self {
+                Self::A => "A",
+                Self::NS => "NS",
+                Self::MD => "MD",
+                Self::MF => "MF",
+                Self::CNAME => "CNAME",
+                Self::SOA => "SOA",
+                Self::MB => "MB",
+                Self::MG => "MG",
+                Self::MR => "MR",
+                Self::NULL => "NULL",
+                Self::WKS => "WKS",
+                Self::PTR => "PTR",
+                Self::HINFO => "HINFO",
+                Self::MINFO => "MINFO",
+                Self::MX => "MX",
+                Self::TXT => "TXT",
+            }
+        )
+    }
+}
+
+impl Display for Class {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}",
+            match self {
+                Self::IN => "IN",
+                Self::CS => "CS",
+                Self::CH => "CH",
+                Self::HS => "HS",
+            }
+        )
     }
 }

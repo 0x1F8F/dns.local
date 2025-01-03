@@ -25,10 +25,9 @@
 //
 //
 
-use std::fmt::Display;
+use std::{fmt::Display, usize};
 
 use tracing::trace;
-
 
 pub struct Name<'a> {
     td : &'a [u8],            // Top level domain
@@ -38,15 +37,30 @@ pub struct Name<'a> {
 
 impl<'b> From<&'b [u8]> for Name<'b> {
     fn from(value: &'b [u8]) -> Name {
-        trace!(" loc {} val {}; ",0 , value[0]);
-        let a: &'static [u8] = &[1];
-        Name { td: a , dn: a , sd : None }
+        let l1 = value[0] as usize;
+        let l2 = value[l1 +1] as usize;
+        let l3 = value[l2+l1 +2] as usize;
+        trace!("l1 {} l2 {} l3 {}" , l1 ,l2, l3);
+        let d1 = &value[1..=l1];
+        if l3==0 {
+            Name { td: &value[l1+2..= (l1+2)+l2+2] , dn:d1 , sd : None }
+        } else {
+            Name { td :&value[l1+l2+2..= (l1+l2+2)+l3] , dn:&value[l1+2..=l1+l2+2 ], sd : Some(d1) }
+        }
     }
 }
 
 impl Display for Name<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f , "Name => ")
+        let b: String = self.dn.iter().map(|i| *i as char).collect();
+        let c: String = self.td.iter().map(|i| *i as char).collect();
+        match self.sd {
+            Some(a) => {
+                let a: String = a.iter().map(|i| *i as char).collect();
+                write!(f , "Name => {}.{}.{}",a, b , c)
+            },
+            None => write!(f , "Name => {}.{}",b , c)
+        }
     }
 }
 
