@@ -57,9 +57,9 @@ impl Display for Name<'_> {
         match self.sd {
             Some(a) => {
                 let a: String = a.iter().map(|i| *i as char).collect();
-                write!(f , "Name => {}.{}.{}",a, b , c)
+                write!(f , "{}.{}.{}",a, b , c)
             },
-            None => write!(f , "Name => {}.{}",b , c)
+            None => write!(f , "{}.{}",b , c)
         }
     }
 }
