@@ -9,5 +9,6 @@ pub mod types;
 
 
 pub fn query_parser(payload : &[u8]) -> Option<( Header , Question )> {
+    let header = Header(&payload[0..=12]);
     None
 }
