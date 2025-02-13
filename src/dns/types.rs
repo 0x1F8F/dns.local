@@ -29,29 +29,29 @@
 use std::fmt::Display;
 
 pub enum Type {
-    A,          // 1 host addr
-    NS,         // 2 authoritative name server
-    MD,         // 3 mail destination
-    MF,         // 4 mail fwd
-    CNAME,      // 5 alias
-    SOA,        // 6 starting zone of authority
-    MB,         // 7 mailbox domain name        [alpha]
-    MG,         // 8 mail group member          [alpha]
-    MR,         // 9 mail rename domain name    [alpha]
-    NULL,       // 10 null RR                   [alpha]
-    WKS,        // 11 service description
-    PTR,        // 12 domain name ptr
-    HINFO,      // 13 host inf
-    MINFO,      // 14 mailbox / mail list inf
-    MX,         // 15 mail
-    TXT,        // 16 text
+    A =1,          // 1 host addr
+    NS = 2,         // 2 authoritative name server
+    MD = 3,         // 3 mail destination
+    MF = 4,         // 4 mail fwd
+    CNAME = 5,      // 5 alias
+    SOA = 6,        // 6 starting zone of authority
+    MB = 7,         // 7 mailbox domain name        [alpha]
+    MG = 8,         // 8 mail group member          [alpha]
+    MR = 9,         // 9 mail rename domain name    [alpha]
+    NULL = 10,       // 10 null RR                   [alpha]
+    WKS = 11,        // 11 service description
+    PTR = 12,        // 12 domain name ptr
+    HINFO = 13,      // 13 host inf
+    MINFO = 14,      // 14 mailbox / mail list inf
+    MX = 15,         // 15 mail
+    TXT = 16,        // 16 text
 }
 
 pub enum Class {
-    IN,     // 1 internet
-    CS,     // 2 CSNET
-    CH,     // 3 CHAOS
-    HS,     // 4 hesiod
+    IN = 1,     // 1 internet
+    CS = 2,     // 2 CSNET
+    CH = 3,     // 3 CHAOS
+    HS = 4,     // 4 hesiod
 }
 
 impl Type {

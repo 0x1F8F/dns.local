@@ -24,7 +24,7 @@ pub struct Header<'a>(pub &'a [u8]);
 //        +---------------------------------------------+
 
 
-trait ReadHeader {
+pub trait ReadHeader {
     fn get_id(&self) -> u16;
 
     fn get_qr(&self) -> u8;
